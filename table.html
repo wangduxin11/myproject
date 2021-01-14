@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>表格增删改查</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      form {
+        width: 564px;
+        margin: 0 auto;
+      }
+      input {
+        outline: none;
+        border-radius: 8px;
+      }
+      label {
+        width: 100px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        display: inline-block;
+        background: #251c1c;
+        color: #fff;
+        vertical-align: middle;
+      }
+      .infoBox {
+        margin: 10px 0;
+        font-size: 16px;
+        position: relative;
+        border: 1px solid #000;
+        border-radius: 8px;
+        position: relative;
+      }
+      .infoBox:last-child {
+        border: none;
+      }
+      input {
+        width: 460px;
+        height: 50px;
+        line-height: 50px;
+        box-sizing: border-box;
+        vertical-align: middle;
+        padding: 0 10px;
+        border: none;
+      }
+      #education {
+        width: 456px;
+        height: 50px;
+        line-height: 50px;
+        border-radius: 8px;
+      }
+      [type="submit"],
+      [type="reset"] {
+        width: 80px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        text-align: center;
+        margin: 20px;
+        border-radius: 8px;
+        outline: none;
+      }
+      [type="submit"] {
+        background: darkblue;
+        color: #fff;
+      }
+      [type="reset"] {
+        background: #fff;
+      }
+      .infoNode {
+        position: absolute;
+        line-height: 50px;
+        padding-left: 20px;
+        white-space: nowrap;
+      }
+      table,
+      td {
+        border: 1px solid #000;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 0 auto;
+      }
+      td {
+        width: 150px;
+        height: 40px;
+        text-align: center;
+      }
+      tbody tr:nth-child(odd) {
+        background: cornsilk;
+      }
+      [change_index],
+      [del_index] {
+        width: 50px;
+        height: 30px;
+        font-size: 12px;
+        color: #fff;
+        text-align: center;
+        margin: 10px;
+        border: none;
+        background: greenyellow;
+      }
+      [del_index] {
+        background: rgb(218, 5, 5);
+      }
+      .fixedForm {
+        position: fixed;
+        background: rgba(0, 0, 0, 0.5);
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: none;
+      }
+      .fixedForm form {
+        background: #fff;
+        padding: 10px;
+        margin-top: 100px;
+      }
+    </style>
+  </head>
+  <form class="bodyForm">
+    <div class="infoBox">
+      <label for="userName">姓名</label
+      ><input
+        type="text"
+        id="userName"
+        placeholder="只能包含数字字母下划线，且不能以数字开头，长度8~16之间"
+      />
+      <span class="infoNode"></span>
+    </div>
+    <div class="infoBox">
+      <label for="userPhone">联系电话</label
+      ><input type="text" id="userPhone" placeholder="联系电话" />
+      <span class="infoNode"></span>
+    </div>
+    <div class="infoBox">
+      <label for="education">学历</label>
+      <!-- <input type="text" id="education" placeholder="学历" /> -->
+      <select id="education">
+        <option value="小学">小学</option>
+        <option value="初中">初中</option>
+        <option value="高中">高中</option>
+        <option value="中专">中专</option>
+        <option value="大专">大专</option>
+        <option value="本科">本科</option>
+        <option value="研究生">研究生</option>
+        <option value="博士">博士</option>
+        <option value="博士后">博士后</option>
+      </select>
+      <span class="infoNode"></span>
+    </div>
+    <div class="infoBox">
+      <label for="age">年龄</label
+      ><input type="text" id="age" placeholder="年龄" />
+      <span class="infoNode"></span>
+    </div>
+    <div class="infoBox">
+      <label for="paying">期望薪资</label
+      ><input type="text" id="paying" placeholder="期望薪资" />
+      <span class="infoNode"></span>
+    </div>
+    <div class="infoBox">
+      <button type="submit">保存</button>
+      <button type="reset">重置</button>
+    </div>
+  </form>
+
+  <table>
+    <thead>
+      <td>姓名</td>
+      <td>联系电话</td>
+      <td>学历</td>
+      <td>年龄</td>
+      <td>期望薪资(单位：K)</td>
+      <td>操作</td>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="fixedForm">
+    <form>
+      <div class="infoBox">
+        <label for="userName">姓名</label
+        ><input
+          type="text"
+          id="userName1"
+          placeholder="只能包含数字字母下划线，且不能以数字开头，长度8~16之间"
+        />
+        <span class="infoNode"></span>
+      </div>
+      <div class="infoBox">
+        <label for="userPhone">联系电话</label
+        ><input type="text" id="userPhone1" placeholder="联系电话" />
+        <span class="infoNode"></span>
+      </div>
+      <div class="infoBox">
+        <label for="education">学历</label>
+        <!-- <input type="text" id="education" placeholder="学历" /> -->
+        <select id="education1">
+          <option value="小学">小学</option>
+          <option value="初中">初中</option>
+          <option value="高中">高中</option>
+          <option value="中专">中专</option>
+          <option value="大专">大专</option>
+          <option value="本科">本科</option>
+          <option value="研究生">研究生</option>
+          <option value="博士">博士</option>
+          <option value="博士后">博士后</option>
+        </select>
+        <span class="infoNode"></span>
+      </div>
+      <div class="infoBox">
+        <label for="age">年龄</label
+        ><input type="text" id="age1" placeholder="年龄" />
+        <span class="infoNode"></span>
+      </div>
+      <div class="infoBox">
+        <label for="paying">期望薪资</label
+        ><input type="text" id="paying1" placeholder="期望薪资" />
+        <span class="infoNode"></span>
+      </div>
+      <div class="infoBox">
+        <button type="submit" class="goChange">保存修改</button>
+      </div>
+    </form>
+  </div>
+  <body>
+    <script>
+      let personInfos = [
+        {
+          name: "张三",
+          phone: "13784578934",
+          education: "博士后",
+          age: 30,
+          paying: 19,
+          educationIndex: "8",
+        },
+        {
+          name: "李四",
+          phone: "18384578434",
+          education: "博士",
+          educationIndex: "7",
+          age: 28,
+          paying: 15,
+        },
+      ];
+      window.localStorage.setItem("personInfos", JSON.stringify(personInfos));
+      //   获取页面元素
+      const tbodyObj = document.querySelector("tbody");
+      const userNameObj = document.querySelector("#userName");
+      const phoneObj = document.querySelector("#userPhone");
+      const ageObj = document.querySelector("#age");
+      const payingObj = document.querySelector("#paying");
+      const educationObj = document.querySelector("#education");
+      const submitObj = document.querySelector('.bodyForm [type="submit"]');
+      const resetObj = document.querySelector('.bodyForm [type="reset"]');
+      const changeObj = document.querySelector(".fixedForm");
+      const goChangeObj = document.querySelector(".goChange");
+
+      personInfos = window.localStorage.getItem("personInfos");
+
+      setTable(JSON.parse(personInfos));
+      formOption();
+      //   设置表格
+      function setTable(arr) {
+        let personStr = "";
+        arr.forEach((v, k) => {
+          personStr += `<tr>
+        <td>${v.name}</td>
+        <td>${v.phone}</td>
+        <td education_index='${v.educationIndex}'>${v.education}</td>
+        <td>${v.age}</td>
+        <td>${v.paying}</td>
+        <td><button change_index=${k}>修改</button><button del_index=${k}>删除</button></td>
+      </tr>`;
+        });
+        tbodyObj.innerHTML = personStr;
+      }
+
+      // 表单操作
+      function formOption() {
+        personInfos = JSON.parse(window.localStorage.getItem("personInfos"));
+        // 定义空对象
+        let newPerson = {};
+        let nameState = false;
+        let phoneState = false;
+        let ageState = false;
+        let payingState = false;
+        // 姓名的正则  只能包含数字字母下划线，且不能以数字开头，长度8~16之间
+        const nameReg = /^(?!0-9)[a-zA-Z0-9_]{8,16}$/;
+        userNameObj.addEventListener("change", function () {
+          if (!nameReg.test(userNameObj.value)) {
+            userNameObj.parentElement.style.border = "1px solid red";
+            userNameObj.nextElementSibling.innerHTML =
+              "只能包含数字字母下划线，且不能以数字开头，长度8~16之间";
+            userNameObj.nextElementSibling.style.color = "red";
+          } else {
+            // 判断用户是否存在
+            if (
+              personInfos.some((v) => {
+                return userNameObj.value === v.name;
+              })
+            ) {
+              userNameObj.parentElement.style.border = "1px solid red";
+              userNameObj.nextElementSibling.innerHTML = "该用户已经存在";
+              userNameObj.nextElementSibling.style.color = "red";
+            } else {
+              // 验证通过
+              userNameObj.parentElement.style.border = "1px solid green";
+              userNameObj.nextElementSibling.innerHTML = "成功";
+              userNameObj.nextElementSibling.style.color = "green";
+              nameState = true;
+              newPerson.name = userNameObj.value;
+            }
+          }
+        });
+
+        // 电话正则
+        const phoneReg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+        phoneObj.addEventListener("change", function () {
+          if (!phoneReg.test(phoneObj.value)) {
+            phoneObj.parentElement.style.border = "1px solid red";
+            phoneObj.nextElementSibling.innerHTML = "手机格式不对";
+            phoneObj.nextElementSibling.style.color = "red";
+          } else {
+            // 验证通过
+            phoneObj.parentElement.style.border = "1px solid green";
+            phoneObj.nextElementSibling.innerHTML = "成功";
+            phoneObj.nextElementSibling.style.color = "green";
+            phoneState = true;
+            newPerson.phone = phoneObj.value;
+          }
+        });
+
+        // 年龄正则
+        const ageReg = /^(?:[1-9][0-9]?|1[01][0-9]|120)$/;
+        ageObj.addEventListener("change", function () {
+          if (!ageReg.test(ageObj.value)) {
+            ageObj.parentElement.style.border = "1px solid red";
+            ageObj.nextElementSibling.innerHTML =
+              "必须是1-120之间的整数,不能以0开头";
+            ageObj.nextElementSibling.style.color = "red";
+          } else {
+            // 验证通过
+            ageObj.parentElement.style.border = "1px solid green";
+            ageObj.nextElementSibling.innerHTML = "成功";
+            ageObj.nextElementSibling.style.color = "green";
+            ageState = true;
+            newPerson.age = ageObj.value;
+          }
+        });
+
+        // 薪资正则
+        const payingReg = /^[1-9]\d*$/;
+        payingObj.addEventListener("change", function () {
+          if (!payingReg.test(payingObj.value)) {
+            payingObj.parentElement.style.border = "1px solid red";
+            payingObj.nextElementSibling.innerHTML = "必须是非零正整数";
+            payingObj.nextElementSibling.style.color = "red";
+          } else {
+            // 验证通过
+            payingObj.parentElement.style.border = "1px solid green";
+            payingObj.nextElementSibling.innerHTML = "成功";
+            payingObj.nextElementSibling.style.color = "green";
+            payingState = true;
+            newPerson.paying = payingObj.value / 1000;
+          }
+        });
+
+        // 增
+        submitObj.addEventListener("click", function (e) {
+          e.preventDefault();
+          newPerson.educationIndex = educationObj.selectedIndex;
+          newPerson.education =
+            educationObj.options[educationObj.selectedIndex].value;
+          if (nameState && phoneState && ageState && payingState) {
+            personInfos.push(newPerson);
+            window.localStorage.setItem(
+              "personInfos",
+              JSON.stringify(personInfos)
+            );
+            setTable(personInfos);
+            reset();
+          } else {
+            return;
+          }
+        });
+
+        resetObj.addEventListener("click", function () {
+          reset();
+        });
+        function reset() {
+          newPerson = {};
+          nameState = false;
+          phoneState = false;
+          ageState = false;
+          payingState = false;
+          const infoNodeObjs = document.querySelectorAll(".infoNode");
+          const infoBoxObjs = document.querySelectorAll(".infoBox");
+          const inputBoxObjs = document.querySelectorAll("input");
+          infoBoxObjs.forEach((v, k) => {
+            if (k === infoBoxObjs.length - 1) return;
+            v.style.border = "1px solid #000";
+          });
+          inputBoxObjs.forEach((v) => {
+            v.value = "";
+          });
+          infoNodeObjs.forEach((v) => {
+            v.innerHTML = "";
+          });
+        }
+      }
+
+      let change_index = 0;
+      //   删除与修改
+      deloOrChangePerson();
+      function deloOrChangePerson() {
+        tbodyObj.addEventListener("click", function (e) {
+          if (e.target.hasAttribute("del_index")) {
+            console.log(e.target.getAttribute("del_index"));
+            personInfos.splice(e.target.getAttribute["del_index"], 1);
+            setTable(personInfos);
+            window.localStorage.setItem(
+              "personInfos",
+              JSON.stringify(personInfos)
+            );
+          }
+          if (e.target.hasAttribute("change_index")) {
+            personInfos = JSON.parse(
+              window.localStorage.getItem("personInfos")
+            );
+            change_index = e.target.getAttribute("change_index");
+            changeObj.querySelector("#userName1").value =
+              personInfos[change_index].name;
+            changeObj.querySelector("#userPhone1").value =
+              personInfos[change_index].phone;
+            changeObj.querySelector("#age1").value =
+              personInfos[change_index].age;
+            changeObj.querySelector("#paying1").value =
+              personInfos[change_index].paying;
+            console.log(personInfos[change_index].educationIndex);
+            changeObj.querySelector("#education1").selectedIndex =
+              personInfos[change_index].educationIndex;
+            changeObj.style.display = "block";
+          }
+        });
+      }
+      goChangeObj.onclick = function (e) {
+        e.preventDefault();
+        personInfos[change_index].name = changeObj.querySelector(
+          "#userName1"
+        ).value;
+        personInfos[change_index].age = changeObj.querySelector("#age1").value;
+        personInfos[change_index].phone = changeObj.querySelector(
+          "#userPhone1"
+        ).value;
+        personInfos[change_index].paying = changeObj.querySelector(
+          "#paying1"
+        ).value;
+        personInfos[change_index].educationIndex = changeObj.querySelector(
+          "#education1"
+        ).selectedIndex;
+
+        window.localStorage.setItem("personInfos", JSON.stringify(personInfos));
+        setTable(personInfos);
+        changeObj.style.display = "none";
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注册页</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <style>
+      .enrollSuccess {
+        display: none;
+        width: 400px;
+        margin: 150px auto 0;
+        text-align: center;
+        border: 2px solid rgb(135, 245, 9);
+        padding: 50px;
+      }
+      .enrollSuccess .title {
+        font-size: 30px;
+        color: rgb(106, 247, 11);
+        font-weight: bold;
+      }
+      .secondBox {
+        font-size: 20px;
+        line-height: 30px;
+        margin: 10px 0;
+      }
+      .secondBox span {
+        color: rgb(247, 11, 168);
+        font-size: 28px;
+      }
+      .enrollSuccess a {
+        color: rgb(113, 11, 247);
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="formBox">
+      <h2>我是注册页</h2>
+      <form>
+        <div class="normalInt">
+          <label for="userName">用户名:</label>
+          <input type="text" placeholder="用户名" id="userName" />
+          <div class="note"></div>
+        </div>
+        <div class="normalInt">
+          <label for="pwd1">密码:</label
+          ><input type="password" placeholder="密码" id="pwd1" />
+        </div>
+        <div class="normalInt">
+          <label for="pwd2">确认密码:</label>
+          <input type="password" placeholder="确认密码" id="pwd2" />
+          <div class="note"></div>
+        </div>
+        <div class="normalInt">
+          <label for="enroll">验证码:</label
+          ><input type="text" placeholder="验证码" id="enroll" /><span
+            class="vc"
+          ></span>
+          <div class="note"></div>
+        </div>
+        <button class="submit" disabled="true">注册</button>
+      </form>
+    </div>
+    <div class="enrollSuccess">
+      <div class="title">注册成功</div>
+      <div class="secondBox"><span>5</span>s后跳转首页</div>
+      <a href="../index.html" class="goIndex">立刻跳转</a>
+    </div>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/tools.js"></script>
+    <script src="../js/public.js"></script>
+    <script>
+      let nameSuccess = false;
+      let pwdSuccess = false;
+      let vcSuccess = false;
+      setVcs();
+      $("#userName").blur(function () {
+        $.ajax({
+          url: "../server/goods_select.php",
+          type: "post",
+          data: { userName: $("#userName").val() },
+          dataType: "json",
+          success: (res) => {
+            if (res.result === 0) {
+              $("#userName")
+                .next()
+                .html("您使用的用户名已经注册")
+                .css({ color: "red" });
+              nameSuccess = false;
+            }
+            if (res.result === 1) {
+              $("#userName")
+                .next()
+                .html("用户名可用")
+                .css({ color: "rgb(84, 224, 19)" });
+              nameSuccess = true;
+            }
+            submitState();
+          },
+        });
+      });
+      $("#pwd2").blur(function () {
+        if ($("#pwd2").val() === $("#pwd1").val()) {
+          $("#pwd2").next().html("密码一致").css({ color: "rgb(84, 224, 19)" });
+          pwdSuccess = true;
+        } else {
+          $("#pwd2")
+            .next()
+            .html("两次密码不一致，请检查!!!")
+            .css({ color: "red" });
+          pwdSuccess = false;
+        }
+        submitState();
+      });
+      enroll();
+      /*
+      
+      */
+      $("form").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: "../server/goods_res.php",
+          type: "post",
+          data: { userName: $("#userName").val(), userPwd: $("#pwd2").val() },
+          dataType: "json",
+          success: (res) => {
+            if (res.result === 0) {
+              window.alert("注册失败！请重新注册");
+              $("input").html("");
+              nameSuccess = false;
+              pwdSuccess = false;
+              vcSuccess = false;
+            }
+            if (res.result === 1) {
+              $(".formBox").hide();
+              $(".enrollSuccess").show();
+              let seconds = 5;
+              setInterval(() => {
+                seconds--;
+                $(".secondBox span").html(seconds);
+                if (seconds == 0) {
+                  window.location.href = "../index.html";
+                }
+              }, 1000);
+            }
+          },
+        });
+      });
+      function submitState() {
+        if (nameSuccess && pwdSuccess && vcSuccess) {
+          $(".submit").prop("disabled", false);
+        } else {
+          $(".submit").prop("disabled", true);
+        }
+      }
+    </script>
+  </body>
+</html>

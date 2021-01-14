@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>购物车</title>
+    <style>
+      .headerInfo,
+      li {
+        display: flex;
+      }
+      ul,
+      li {
+        list-style: none;
+        margin: 10px;
+      }
+      img {
+        width: 80px;
+        height: 80px;
+        float: left;
+      }
+      .allbox {
+        width: 20%;
+      }
+      .proinfo {
+        width: 40%;
+      }
+      .price {
+        width: 10%;
+      }
+      .goods {
+        width: 15%;
+      }
+      .allprice {
+        width: 15%;
+      }
+      .del {
+        width: 80px;
+      }
+      .headerInfo {
+        margin: 10px;
+      }
+      .addNum,
+      .reduceNum {
+        width: 50px;
+        height: 30px;
+        line-height: 30px;
+        display: inline-block;
+        text-align: center;
+      }
+      .aloneProNum {
+        padding: 0 5px;
+      }
+      .addNum {
+        background: cornflowerblue;
+      }
+      .reduceNum {
+        background: crimson;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shopBox">
+      <div class="headerInfo">
+        <div class="allbox">
+          <input type="checkbox" id="all" /><label for="all">全选</label>
+        </div>
+        <div class="proinfo">商品信息</div>
+        <div class="price">单价</div>
+        <div class="goods">数量</div>
+        <div class="allprice">金额</div>
+        <div class="del">删除</div>
+      </div>
+      <ul class="middleLists"></ul>
+      <div class="allPrice"></div>
+    </div>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/tools.js"></script>
+    <script>
+      setPage();
+      allClick();
+      function setPage() {
+        const shopCart = JSON.parse(localStorage.getItem("cart"));
+        console.log(shopCart);
+        let middleProList = "";
+        let allhecked = true;
+        let allPrices = 0;
+        let allNumS = 0;
+        let allamount = 0;
+        shopCart.forEach((v, k) => {
+          if (!v.checked) {
+            allhecked = false;
+          }
+          if (v.checked) {
+            allPrices += v.buyNum * v.priceView.finalPrice.price;
+            allNumS++;
+            allamount+=v.buyNum*1;
+          }
+          middleProList += `<li data_index="${k}">
+        <div class="allbox"><input type="checkbox" ${
+          v.checked ? "checked" : ""
+        }/></div>
+        <div class="proinfo">
+            <img src="//a.vpimg3.com${v.smallImage}" alt="" />
+            <div>${v.longTitle}</div>
+        </div>
+        <div  class="price">¥${v.priceView.finalPrice.price}</div>
+        <div class="goods"><span class='addNum'>+</span><span data_max=${
+          v.buyLimitMax
+        } data_min=${v.buyLimitMin} class='aloneProNum'>${
+            v.buyNum
+          }</span><span class='reduceNum'>-</span></div>
+        <div class="allprice">${v.buyNum * v.priceView.finalPrice.price}</div>
+        <button class='del'>删除</button>
+      </li>`;
+        });
+        $(".middleLists").html(middleProList);
+        $("#all").prop("checked", allhecked);
+        let priceStr = "";
+        priceStr = `您一共选择了${allNumS}种商品,一共${allamount}件商品，合计消费￥${allPrices}`;
+        $(".allPrice").html(priceStr);
+        aloneClick();
+        delPro();
+        aloneProNum();
+      }
+
+      //   点击全选
+      function allClick() {
+        $("#all").click(function () {
+          const shopCart = JSON.parse(localStorage.getItem("cart"));
+          let allChecked = $(this).prop("checked");
+          console.log(allChecked);
+          shopCart.forEach((v, k) => {
+            v.checked = allChecked;
+          });
+          window.localStorage.setItem("cart", JSON.stringify(shopCart));
+          setPage();
+        });
+      }
+      //   每个商品单独点击
+      function aloneClick() {
+        $(".middleLists input").click(function () {
+          const shopCart = JSON.parse(localStorage.getItem("cart"));
+          shopCart[$(this).parent().parent().attr("data_index")].checked = $(
+            this
+          ).prop("checked");
+          window.localStorage.setItem("cart", JSON.stringify(shopCart));
+          setPage();
+        });
+      }
+
+      // 单独点击删除
+      function delPro() {
+        $(".middleLists .del").click(function () {
+          let goDel = window.confirm("你确定这件商品不要了吗？");
+          if (!goDel) return;
+          const shopCart = JSON.parse(localStorage.getItem("cart"));
+          shopCart.splice($(this).parent().attr("data_index"), 1);
+          window.localStorage.setItem("cart", JSON.stringify(shopCart));
+          setPage();
+        });
+      }
+      //  数量的增加和减少
+      function aloneProNum() {
+        $(".addNum").click(function () {
+          $(this)
+            .next()
+            .text(
+              $(this).next().text() * 1 < $(this).next().attr("data_max") * 1
+                ? $(this).next().text() * 1 + 1
+                : $(this).next().attr("data_max")
+            );
+          const shopCart = JSON.parse(localStorage.getItem("cart"));
+          shopCart[$(this).parent().parent().attr("data_index")].buyNum =
+            $(this).next().text() * 1;
+          window.localStorage.setItem("cart", JSON.stringify(shopCart));
+          setPage();
+        });
+        $(".reduceNum").click(function () {
+          $(this)
+            .prev()
+            .text(
+              $(this).prev().text() * 1 > $(this).prev().attr("data_min") * 1
+                ? $(this).prev().text() * 1 - 1
+                : $(this).prev().attr("data_min")
+            );
+          const shopCart = JSON.parse(localStorage.getItem("cart"));
+          shopCart[$(this).parent().parent().attr("data_index")].buyNum =
+            $(this).prev().text() * 1;
+          window.localStorage.setItem("cart", JSON.stringify(shopCart));
+          setPage();
+        });
+      }
+    </script>
+  </body>
+</html>

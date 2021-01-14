@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <style>
+      .typeList,
+      li {
+        list-style: none;
+      }
+      .typeList > li {
+        display: inline-block;
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        background: darkblue;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+      }
+      .cancelLogin {
+        width: 200px;
+        background: crimson;
+      }
+      .focus-banner {
+        padding-top: 30px;
+        padding-bottom: 20px;
+        position: relative;
+        margin-bottom: 10px;
+        background-image: url(./images/index/shufflingbackg.jpg);
+        position: relative;
+        background-repeat: no-repeat;
+        background-position: center top;
+      }
+      .focus-banner-con-wrq {
+        overflow: hidden;
+        padding: 12px;
+        padding-bottom: 0;
+        background: #fff;
+        background: rgba(255, 255, 255, 0.86);
+        width: 976px;
+        position: relative;
+        margin: 0 auto;
+        box-shadow: 0 1px 3px rgba(167, 167, 167, 0.4);
+      }
+      .fbc-listwra {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      .fbc-list {
+        overflow: hidden;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
+      .fbc-listbox {
+        z-index: 1;
+        width: 976px;
+        height: 340px;
+        position: relative;
+      }
+      .fbc-list li {
+        width: 976px;
+        height: 340px;
+        z-index: 2;
+        opacity: 1;
+        float: left;
+      }
+      .fbc-btn {
+        position: absolute;
+        top: 50%;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        margin-top: -30px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        z-index: 3;
+      }
+      .fbc-btn-right {
+        right: 0;
+      }
+      .fbc-btn-left {
+        left: 0;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      .focus-banner-con-wrq ol {
+        list-style: none;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        overflow: hidden;
+      }
+      .focus-banner-con-wrq ol li {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        margin: 10px;
+        float: left;
+      }
+      .focus-banner-con-wrq ol .active {
+        background: salmon;
+      }
+      .floorsBox {
+        width: 1026px;
+        margin: 20px auto;
+      }
+      .typeFloorsCotent {
+        margin: 0 auto 20px;
+      }
+      .shop-sort-title {
+        margin-bottom: 30px;
+        min-height: 43px;
+        border-bottom: 1px #1a1a1a solid;
+      }
+      .shop-sort-title img {
+        height: 100%;
+        width: auto;
+      }
+      .brand-item {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        margin-right: 20px;
+        width: 490px;
+        height: 333px;
+        background: #fff;
+      }
+      .typeTitle {
+        margin-top: 18px;
+        cursor: pointer;
+        font-family: MicrosoftYaHei;
+        font-weight: 700;
+        font-size: 18px;
+        color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 455px;
+        display: block;
+      }
+      .discount {
+        line-height: 32px;
+        height: 32px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .discount .salebg2 {
+        font-size: 18px;
+        color: #f10582;
+        margin-right: 3px;
+        font-weight: 700;
+      }
+      .goLink {
+        display: block;
+      }
+      .brandImg {
+        width: 490px;
+        height: 234px;
+      }
+      footer {
+        width: 100%;
+        height: 400px;
+        line-height: 400px;
+        background: chocolate;
+        color: #fff;
+        text-align: center;
+        font-weight: 80px;
+        font-size: 60px;
+        margin-top: 20px;
+      }
+      .perchImg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+      }
+      .fixSearch {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 80px;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        line-height: 80px;
+        text-align: center;
+        left: 0;
+        z-index: 10;
+        font-weight: bold;
+        font-size: 30px;
+        display: none;
+      }
+      .floorsTypeLists {
+        width: 100px;
+        position: fixed;
+        right: 30px;
+        top: 240px;
+        z-index: 10;
+        display: none;
+      }
+      .floorsTypeLists li {
+        height: 30px;
+        line-height: 30px;
+        background: chartreuse;
+        text-align: center;
+        border: 1px solid #000;
+      }
+      .floorsTypeLists li.active {
+        background: coral;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 个人中心 -->
+    <div class="person"></div>
+    <!-- 登录注册 -->
+    <a class="normalBtn register" href="./pages/register.html">注册</a>
+    <a class="normalBtn login" href="./pages/login.html">登录</a>
+    <a class="normalBtn cancelLogin" href="javascript:;">注销登录</a>
+    <!-- 列表按钮 -->
+    <ul class="typeList">
+      <li>唯品快抢</li>
+      <li>品牌清仓</li>
+    </ul>
+    <!-- 轮播图 -->
+    <div class="focus-banner">
+      <div class="focus-banner-con-wrq">
+        <div class="fbc-listbox">
+          <div class="fbc-listwra">
+            <ul class="fbc-list"></ul>
+          </div>
+          <span class="fbc-btn fbc-btn-left"
+            ><i class="vipFont i-hv">&lt;</i></span
+          >
+          <span class="fbc-btn fbc-btn-right"
+            ><i class="vipFont i-hv">&gt;</i></span
+          >
+          <ol></ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 分类展示区加楼层导航 -->
+    <div class="floorsBox">
+      <div class="fixSearch">我是悬浮的框，滚动到一定地方才展示</div>
+      <ul class="typeFloorsCotent"></ul>
+      <ol class="floorsTypeLists"></ol>
+    </div>
+    <footer>我是底层的fotter</footer>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/cookie.js"></script>
+    <script>
+      // // 头部按钮
+      showPerson();
+      function showPerson() {
+        var cookies = myGetCookie();
+        if (cookies.name) {
+          $(".person").html(`欢迎回来${cookies.name}`);
+        }
+      }
+      $(".login").click(function (e) {
+        $(this).attr({
+          href: $(".login").attr("href") + "?url=" + window.location.href,
+        });
+      });
+      $(".typeList li").click(function () {
+        window.location.href = `./pages/goodsList.html?type=${$(this).html()}`;
+      });
+      $(".cancelLogin").click(function () {
+        mySetCookie("name", "", -1);
+        $(".person").html("");
+      });
+      // 轮播图数据
+      const shufflingArr = [
+        { src: "./images/index/shuffling1.jpg" },
+        { src: "./images/index/shuffling2.jpg" },
+        { src: "./images/index/shuffling3.jpg" },
+        { src: "./images/index/shuffling4.jpg" },
+      ];
+      // 轮播图
+      shuffling();
+      function shuffling() {
+        // 当前页面图片的索引
+        let newIndex = 1;
+        // 定时器地址
+        let time = 0;
+        // 防抖或者节流,防止多次点击定时器的叠加
+        let animating = true;
+
+        // ul的宽度
+        let boxWidth = $(".fbc-list").width();
+        //  渲染小点
+        let dotStr = "";
+        shufflingArr.forEach(function (v, k) {
+          dotStr += `${
+            k === newIndex - 1 ? '<li class="active"></li>' : "<li></li>"
+          }`;
+        });
+        $(".focus-banner ol").html(dotStr);
+        shufflingArr.push(shufflingArr[0]);
+        shufflingArr.unshift(shufflingArr[shufflingArr.length - 2]);
+
+        // 设定最初样式
+        setLiImg();
+        // 自动切换
+        autoShuffling();
+        // 移入移除定时器处理
+        BoxEnterLeave();
+        // 图片切换
+        changeImg();
+        function setLiImg() {
+          let imgsStr = "";
+          shufflingArr.forEach((v, k) => {
+            imgsStr += `<li class="fbc-list-item active-pannel" data_index=${k}>
+                  <img src=${v.src} />
+                </li>`;
+          });
+          $(".fbc-list")
+            .css({
+              width: shufflingArr.length * boxWidth,
+              left: -boxWidth * newIndex,
+            })
+            .html(imgsStr);
+        }
+        // 自动切换
+        function autoShuffling() {
+          time = setInterval(function () {
+            if (!animating) return;
+            newIndex++;
+            moveJudge();
+          }, 3000);
+        }
+
+        //  运动与判断
+        function moveJudge() {
+          animating = false;
+          if (newIndex === shufflingArr.length - 1) {
+            $(".focus-banner ol li")
+              .removeClass("active")
+              .eq(0)
+              .addClass("active");
+          } else if (newIndex === 0) {
+            $(".focus-banner ol li")
+              .removeClass("active")
+              .last()
+              .addClass("active");
+          } else {
+            $(".focus-banner ol li")
+              .removeClass("active")
+              .eq(newIndex - 1)
+              .addClass("active");
+          }
+          $(".fbc-list").animate({ left: -boxWidth * newIndex }, function () {
+            if (newIndex === shufflingArr.length - 1) {
+              newIndex = 1;
+              $(".fbc-list").css({
+                left: -boxWidth * newIndex,
+              });
+            }
+            if (newIndex === 0) {
+              newIndex = shufflingArr.length - 2;
+              $(".fbc-list").css({
+                left: -boxWidth * newIndex,
+              });
+            }
+            animating = true;
+          });
+        }
+
+        // 当移入或者移出时时清除定时器
+        function BoxEnterLeave() {
+          $(".fbc-listbox").mouseenter(function () {
+            clearInterval(time);
+          });
+          $(".fbc-listbox").mouseleave(function () {
+            autoShuffling();
+          });
+        }
+
+        // 上一张 下一张切换
+        function changeImg() {
+          $(".fbc-listbox").click(function (e) {
+            if (!animating) return;
+            // 因为每次都是运动完之后才切换下一张，所以不会存在，移动到第一张的时候，再点击是白色，因为刚运动完，就会切换到最后一张，并且newIndex也会切换
+            if (
+              $(e.target).parent().hasClass("fbc-btn-left") ||
+              $(e.target).hasClass("fbc-btn-left")
+            ) {
+              newIndex--;
+            }
+            if (
+              $(e.target).parent().hasClass("fbc-btn-right") ||
+              $(e.target).hasClass("fbc-btn-right")
+            ) {
+              newIndex++;
+            }
+            if ($(e.target).parent()[0].tagName === "OL") {
+              newIndex = $(e.target).index() + 1;
+            }
+            moveJudge();
+          });
+        }
+
+        // 判断浏览器是否可见，可见时添加定时器，不可见时移除定时器
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "hidden") {
+            clearInterval(time);
+          } else {
+            autoShuffling();
+          }
+        });
+      }
+
+      // 楼层导航数据加懒加载
+
+      floorsNavLoading();
+      function floorsNavLoading() {
+        // 导航分类数据
+        const floorsTypeArr = [
+          {
+            type: "女装",
+            typeSrc: "//a.vpimg3.com/upload/dop/2016/03/17/121/woman_2ad.png",
+            floorId: 1,
+          },
+          {
+            type: "鞋包",
+            typeSrc: "//a.vpimg4.com/upload/dop/2016/03/17/72/shoe.png",
+            floorId: 2,
+          },
+          {
+            type: "男装",
+            typeSrc: "//a.vpimg3.com/upload/dop/2018/02/01/196/men_hhqx.png",
+            floorId: 3,
+          },
+          {
+            type: "运动",
+            typeSrc: "//a.vpimg3.com/upload/dop/2016/03/17/183/sport.png",
+            floorId: 4,
+          },
+          {
+            type: "饰品",
+            typeSrc: "//a.vpimg2.com/upload/dop/2016/03/17/77/watch.png",
+            floorId: 5,
+          },
+          {
+            type: "美妆",
+            typeSrc: "//a.vpimg2.com/upload/dop/2016/03/17/116/beauty_wrf.png",
+            floorId: 6,
+          },
+          {
+            type: "母婴",
+            typeSrc: "//a.vpimg4.com/upload/dop/2016/03/17/156/kid_zZb.png",
+            floorId: 7,
+          },
+          {
+            type: "居家",
+            typeSrc: "//a.vpimg2.com/upload/dop/2016/03/17/144/home_zhs.png",
+            floorId: 8,
+          },
+          {
+            type: "生活",
+            typeSrc: "//a.vpimg2.com/upload/dop/2016/06/02/199/life-titel.png",
+            floorId: 9,
+          },
+        ];
+
+        // 懒加载瀑布流的实现
+        let requestDataIndex = 0;
+        setFloorsTypeLists();
+        // 渲染楼层导航
+        function setFloorsTypeLists() {
+          let typeStr = "";
+          floorsTypeArr.forEach((v, k) => {
+            typeStr += `${
+              k === requestDataIndex
+                ? `<li class='active'>${v.type}</li>`
+                : `<li>${v.type}</li>`
+            }`;
+          });
+          typeStr += '<li id="backTop">回到顶部</li>';
+          $(".floorsTypeLists").html(typeStr);
+          gofloors();
+        }
+
+        // 点击跳转对应位置并加载
+        function gofloors() {
+          $(".floorsTypeLists li").click(function () {
+            if ($(this).index() === $(".floorsTypeLists li").length - 1) {
+              $(window).scrollTop(0);
+            } else {
+              requestDataIndex = $(this).index();
+              requestData(floorsTypeArr[requestDataIndex]);
+
+              $(".floorsTypeLists li")
+                .removeClass("active")
+                .eq(requestDataIndex)
+                .addClass("active");
+              $(window).scrollTop(
+                $(".typeFloorsCotent>li").eq(requestDataIndex).offset().top -
+                  400
+              );
+              if (requestDataIndex === 0) return;
+              requestData(floorsTypeArr[requestDataIndex - 1]);
+            }
+          });
+        }
+        // 节流
+        let loadingDataStatus = false;
+        requestData(floorsTypeArr[requestDataIndex]);
+        // 瀑布流逻辑
+        $(window).scroll(function () {
+          if ($(document).scrollTop() + 200 >= $(".floorsBox").offset().top) {
+            $(".fixSearch").slideDown();
+            $(".floorsTypeLists").fadeIn();
+          } else {
+            $(".fixSearch").slideUp();
+            $(".floorsTypeLists").fadeOut();
+          }
+          if (!loadingDataStatus) return;
+
+          $(".typeFList").each((k, v) => {
+            // 开始进入 $(v).offset().top = $(document).scrollTop()+$(window).height()
+            // 开始离开 $(v).offset().top +$(v).height()= $(document).scrollTop()
+            if (
+              $(v).offset().top <=
+                $(document).scrollTop() + $(window).height() &&
+              $(v).offset().top + $(v).height() >= $(document).scrollTop()
+            ) {
+              $(".floorsTypeLists li")
+                .removeClass("active")
+                .eq(k)
+                .addClass("active");
+              if (floorsTypeArr[k].data) return;
+              requestDataIndex = k;
+              loadingDataStatus = false;
+              requestData(floorsTypeArr[requestDataIndex]);
+            }
+          });
+        
+        });
+        // 请求数据函数
+        function requestData(showTypeObj) {
+          $.get(
+            "/wph1",
+            {
+              floorId: showTypeObj.floorId,
+              newDapLogic: 1,
+              warehouse: "VIP_BJ",
+              channelId: 0,
+              sortType: 1,
+              areaCode: 101101,
+              pagecode: "c",
+              provinceName: "北京市",
+              cityName: "北京市",
+              "brandInfoExt[fields]":
+                "activeIndexTips,displayEndtime,salesNo,brandImage,mobileImageOne,agio,salesName,brandStoreSn,vendorSaleMessage,isSpecialBanner,hiddenEndTime,iconInfo,link,brandType,pms_act_no,showTimeFrom",
+              "brandInfoExt[startIndex]": 0,
+              "brandInfoExt[num]": 36,
+              preview: "",
+              token: "",
+              sell_time_from: "",
+              time_from: "",
+              _: "1605614095679",
+            },
+            function (res) {
+              floorsTypeArr[showTypeObj.floorId - 1].data = res.data;
+              setAllemptypage(floorsTypeArr);
+              loadingDataStatus = true;
+            },
+            "json"
+          );
+        }
+
+        // 设置全部分类的页面
+        function setAllemptypage(arr) {
+          let allStr = "";
+          arr.forEach((v, k) => {
+            allStr += `${
+              v.data === undefined
+                ? `${setFloorContentItems(v.typeSrc, [], {})}`
+                : `${setFloorContentItems(
+                    v.typeSrc,
+                    v.data.items,
+                    v.data.brandInfo
+                  )}`
+            }`;
+          });
+          $(".typeFloorsCotent").html(allStr);
+        }
+        // 设置页面一个分类的页面
+        function setFloorContentItems(typeSrc, arr, obj) {
+          let newFloorStr = ` <li>
+                <div class="shop-sort-title">
+                  <img
+                    src="${typeSrc}"
+                    height="34px"
+                  />
+                </div>
+                <ul class="typeFList">
+                  ${arr.length > 0 ? `${items(arr, obj)} ` : `${items(80, {})}`}
+                </ul>
+              </li>`;
+          $(".typeFloorsCotent").html(newFloorStr);
+
+          // 设定每个li的内容
+          function items(length, info) {
+            let str = "";
+            if (Object.keys(info).length === 0) {
+              for (let i = 0; i < length; i++) {
+                str += `<li class="brand-item">
+                    <img src='https://shop.vipstatic.com/img/te/index_v4/sbg-hash-52ce8a55.png' class='perchImg'>
+                  </li>`;
+              }
+            } else {
+              for (let i = 0; i < length.length; i++) {
+                str += `<li class="brand-item">
+                    <a href="goLink" href=${obj[length[i]].link}>
+                      <div class="brandImg">
+                        <img
+                          src="${obj[length[i]].brandImage.size2}"
+                          alt=""
+                        />
+                      </div>
+                      <div class="typeTitle">${obj[length[i]].salesName}</div>
+                      <div class="discount">${obj[length[i]].agio}</div>
+                    </a>
+                  </li>`;
+              }
+            }
+            return str;
+          }
+          return newFloorStr;
+        }
+      }
+    </script>
+  </body>
+</html>

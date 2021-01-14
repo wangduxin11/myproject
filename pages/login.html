@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <style>
+      .normalInt:nth-child(3) {
+        display: none;
+      }
+      .note a {
+        color: slateblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="formBox">
+      <h2>我是登录页</h2>
+      <form>
+        <div class="normalInt">
+          <label for="userName">用户名:</label>
+          <input type="text" placeholder="用户名" id="userName" />
+          <div class="note"></div>
+        </div>
+        <div class="normalInt">
+          <label for="pwd1">密码:</label
+          ><input type="password" placeholder="密码" id="pwd1" />
+        </div>
+        <div class="normalInt">
+          <label for="enroll">验证码:</label
+          ><input type="text" placeholder="验证码" id="enroll" /><span
+            class="vc"
+          ></span>
+          <div class="note"></div>
+        </div>
+        <button class="submit" disabled="true">登录</button>
+      </form>
+      <div class="normalNote"><div class="inner"></div></div>
+    </div>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/tools.js"></script>
+    <script src="../js/cookie.js"></script>
+    <script src="../js/public.js"></script>
+    <script>
+      let nameSuccess = false;
+      let vcSuccess = false;
+      setVcs();
+      $("#userName").blur(function () {
+        $.ajax({
+          url: "../server/goods_select.php",
+          type: "post",
+          data: { userName: $("#userName").val() },
+          dataType: "json",
+          success: (res) => {
+            if (res.result === 1) {
+              $("#userName")
+                .next()
+                .show()
+                .html(
+                  "您使用的用户名不存在，请修改确认或<a href='./register.html'>注册</a>"
+                )
+                .css({ color: "red" });
+              nameSuccess = false;
+            }
+            if (res.result === 0) {
+              $("#userName").next().hide();
+              nameSuccess = true;
+            }
+            submitState();
+          },
+        });
+      });
+      $("#pwd1").blur(function () {
+        $(".normalInt").eq(2).show();
+      });
+      enroll();
+      $("form").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: "../server/goods_login.php",
+          type: "post",
+          data: { userName: $("#userName").val(), userPwd: $("#pwd1").val() },
+          dataType: "json",
+          success: (res) => {
+            //   登录失败
+            if (res.result === 0) {
+              $(".normalNote")
+                .find(".inner")
+                .html("登录失败，请检查用户名密码输入")
+                .end()
+                .fadeIn(1000)
+                .fadeOut(1000);
+              $("#enroll").val("");
+              $(".vc").trigger("click");
+              vcSuccess = false;
+              submitState();
+            }
+            // 登录成功
+            if (res.result === 1) {
+              mySetCookie("name", $("#userName").val(), 7 * 24 * 60 * 60);
+              console.log(window.location.search.slice(0));
+              // 配置代理后默认会采用相对路径，加上/后不会是相对路径，是绝对路径，但是代理会自动添加前缀，所以要把前面配置代理的部分全部去掉
+              window.location.href = `/${window.location.search.slice(27)}`;
+            }
+          },
+        });
+      });
+      function submitState() {
+        if (nameSuccess && vcSuccess) {
+          $(".submit").prop("disabled", false);
+        } else {
+          $(".submit").prop("disabled", true);
+        }
+      }
+    </script>
+  </body>
+</html>

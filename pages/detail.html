@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <style>
+      .proDetail,
+      .imglist {
+        display: flex;
+      }
+      .imglist {
+        flex-wrap: wrap;
+      }
+      .imgBox {
+        width: 420px;
+        margin: 20px;
+      }
+      .showImg {
+        width: 420px;
+        height: 420px;
+      }
+      .showImg img,
+      .showImg video,
+      .imglist img {
+        width: 100%;
+        height: 100%;
+      }
+      .imglist li {
+        width: 62px;
+        height: 62px;
+        margin: 20px 10px;
+        border: 3px solid #000;
+      }
+      .price {
+        width: 550px;
+        height: 94px;
+        position: relative;
+      }
+      .price_bgimg {
+        width: 100%;
+        height: 100%;
+      }
+      .price_text {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+      .textBox {
+        margin: 30px;
+      }
+      video {
+        background: #000;
+      }
+      .detailList {
+        display: flex;
+      }
+      .detailList li {
+        padding: 10px;
+      }
+      .add,
+      .reduce,
+      .count {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        border: 1px solid#000;
+        font-size: 20px;
+      }
+      .add {
+        background: rgb(17, 121, 14);
+      }
+      .reduce {
+        background: chocolate;
+      }
+      .count {
+        color: red;
+      }
+      .hasComparePrice {
+        display: flex;
+      }
+      .comparePrice,
+      .finalPrice {
+        margin: 10px;
+      }
+      .comparePrice {
+        background: fuchsia;
+      }
+      .finalPrice {
+        background: navajowhite;
+      }
+      .smallTab {
+        position: relative;
+      }
+      .smallTab.active {
+        border: 3px solid red;
+      }
+      .play {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        background-image: url("../images/detail/play.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        top: 50%;
+        left: 50%;
+        margin: -18px 0 0 -18px;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="detailBox">
+      <div class="proDetail">
+        <div class="imgBox"></div>
+        <div class="textBox"></div>
+      </div>
+      <div>
+        <ul class="detailList">
+          <li>规格参数</li>
+          <li>商品展示</li>
+          <li>全部评价</li>
+          <li>关于我们</li>
+        </ul>
+        <ul class="specificationBox"></ul>
+        <div class="detailImgBox"></div>
+      </div>
+    </div>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/tools.js"></script>
+    <script src="../js/cookie.js"></script>
+    <script>
+      const productDetailArr = getUrlVal().product.split("-");
+      let detailText = "";
+      let detailmgs = "";
+      let proCount = 1;
+      setPage();
+      //   渲染页面
+      function setPage() {
+        $.ajax({
+          url:
+            "https://mapi.vip.com/vips-mobile/rest/shopping/pc/product/detail/v5",
+          type: "get",
+          data: {
+            app_name: "shop_pc",
+            app_version: "4.0",
+            warehouse: "VIP_BJ",
+            fdc_area_id: 101101101,
+            client: "pc",
+            mobile_platform: 1,
+            province_id: 101101,
+            api_key: "70f71280d5d547b2a7bb370a529aeea1",
+            user_id: "",
+            mars_cid: "1604847680120_7ee789766b975e170fc7223091c825a3",
+            wap_consumer: "a",
+            productId: productDetailArr[1],
+            functions:
+              "brand_store_info,newBrandLogo,hideOnlySize,extraDetailImages,sku_price,ui_settings",
+            kfVersion: 1,
+            highlightBgImgVer: 1,
+            is_get_TUV: 1,
+            commitmentVer: 2,
+            haitao_description_fields: "text",
+            supportSquare: 1,
+            longTitleVer: 2,
+            propsVer: 1,
+          },
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function (res) {
+            detailmgs = res.data.product;
+            console.log(detailmgs);
+            let showBoolean = true;
+            if (!detailmgs.shortVideoUrl) {
+              showBoolean = false;
+            }
+            if (detailmgs.shortVideoUrl) {
+              detailmgs.previewImages.unshift(detailmgs.previewImages[0]);
+            }
+            /*
+              video标签
+              1、autoplay 视频加载之后自动播放
+              2、controls 显示进度条，时间 控制等
+              3、muted 视频静音，并且刷新之后，可以播放，不设置刷新之后不播放
+             */
+            let imgsStr = `<div class="showImg">
+             ${
+               showBoolean
+                 ? `<video src="${detailmgs.shortVideoUrl}" autoplay loop="loop" controls muted></video>`
+                 : `<img
+                   src=//a.vpimg2.com${detailmgs.previewImages[0].imageUrl.slice(
+                     0,
+                     -4
+                   )}_525x525_90.jpg
+                 />`
+             }
+           </div>
+           <ul class="imglist">
+             ${detailmgs.previewImages
+               .map(function (v, k) {
+                 return `<li dataindex='${k}' class='smallTab${k === 0 ? " active" : ""}' ${showBoolean ? `data_video=${detailmgs.shortVideoUrl}` : ""}>
+                 <img
+                   src="//a.vpimg2.com${v.imageUrl.slice(0, -4)}_525x525_90.jpg"
+                   alt=""
+                 />
+                 ${showBoolean && k === 0 ? `<div class='play'></div>` : ""}
+               </li>`;
+               })
+               .join("")}
+           </ul>`;
+            $(".imgBox").html(imgsStr);
+            let specificationBoxStr = "";
+            detailmgs.props.forEach((element) => {
+              specificationBoxStr += `<li><span>${element.name}</span> <span>${element.value}</span></li>`;
+            });
+            // $(".textBox").html(specificationBoxStr);
+            let detailImgs = `${
+              detailmgs.TUV ? `<img src='${detailmgs.TUV.image}'>` : ""
+            }
+             ${
+               detailmgs.certificationUrl
+                 ? `<img src='${detailmgs.certificationUrl}'>`
+                 : ""
+             }
+             ${detailmgs.detailImages
+               .map((v, k) => {
+                 return v.imageUrl.indexOf("http") === -1
+                   ? `<img src='//a.vpimg4.com${v.imageUrl}'>`
+                   : `<img src='${v.imageUrl}'>`;
+               })
+               .join("")}'>
+             `;
+            $(".detailImgBox").html(detailImgs);
+          },
+        });
+
+        // js中的数字传参，如果长的话请使用字符串，数字js会发生转化
+        $.ajax({
+          url:
+            "https://mapi.vip.com/vips-mobile/rest/shopping/goods/pc/vendorSkuList/v4",
+          type: "get",
+          data: {
+            app_name: "shop_pc",
+            app_version: "4.0",
+            warehouse: "VIP_BJ",
+            fdc_area_id: 101101101,
+            client: "pc",
+            mobile_platform: 1,
+            province_id: 101101,
+            api_key: "70f71280d5d547b2a7bb370a529aeea1",
+            user_id: "",
+            mars_cid: "1604847680120_7ee789766b975e170fc7223091c825a3",
+            wap_consumer: "a",
+            mid: productDetailArr[1],
+            brandid: productDetailArr[0],
+            device: 1,
+            prepayMsgType: 1,
+            functions:
+              "futurePrice,sku_price,prepay_sku_price,flash_sale_stock,businessCode,promotionTips,get_history_price,banInfo,priceChart,quotaInfo,priceView,buyLimit,exclusivePrice,restrictTips,panelView,foreShowActive,showSingleColor,futurePriceView,invisible",
+            freightTipsVer: 3,
+            is_get_prepay_info: 1,
+            needTipsType: 16,
+            supportSquare: 1,
+            supportAllPreheatTipsTypes: 1,
+            supportReserved: 2,
+            promotionTipsVer: 5,
+            priceViewVer: 6,
+          },
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function (res) {
+            detailTextData = res.data;
+            console.log(detailTextData);
+            detailText =
+              detailTextData.product_price_range_mapping[productDetailArr[1]];
+            console.log(detailText);
+            let detailTextStr = `
+           <span>${detailText.longTitle.split("|")[0]}</span>
+           <div>${detailText.longTitle.split("|")[1]}</div>
+           <div class="price">
+             <img
+               src="${detailText.priceView.bgImg}"
+               class="price_bgimg"
+             />
+             <div class="price_text">
+               <div>¥${detailText.priceView.salePrice.salePrice}</div>
+               <div>¥${detailText.priceView.salePrice.saleMarketPrice}</div>
+               <div>${detailText.priceView.salePrice.saleDiscount}</div>
+               <div>${detailText.priceView.saleLabel}</div>
+             </div>
+           </div>
+           <div class="i-freight clearfix" id="J_freight_frame">
+             <span class="freight-name">运费</span>
+             <span id="J_freight_tips" class="freight_tips"
+               >${detailTextData.freightTipsMap.f1.tips}</span
+             >
+           </div>
+           <div class="i-num clearfix" id="J-num-select">
+             <span class='add'>+</span>
+             <em class="count">1</em>
+             <span class='reduce'>-</span>
+           </div>
+           <div class="ui-btn-loading-before clearfix J_cartAdd_Price">
+             <div class="hasComparePrice clearfix">
+               <div class="comparePrice">
+                 <div class="comparePrice_price" title="129">¥</div>
+                 <div class="comparePrice_priceTips"></div>
+               </div>
+               <div class="finalPrice">
+                 <div class="finalPrice_price_wrap">
+                   <span class="finalPrice_price" title="89"
+                     >¥${
+                       detailText.priceView.finalPrice.price
+                     }<span class="price_suff"></span
+                   ></span>
+                 </div>
+                 <div class="finalPrice_priceTips_wrap">
+                   <span class="finalPrice_priceTips">${
+                     detailText.priceView.finalPrice.priceTips
+                   }</span>
+
+                   <span class="finalPrice_subPriceTips">${
+                     detailText.priceView.finalPrice.subPriceTips
+                   }</span>
+
+                   <span class="button_arrow"></span>
+                 </div>
+               </div>
+             </div>
+           </div>
+      `;
+            $(".textBox").html(detailTextStr);
+            proCompute(detailText.buyLimitMin, detailText.buyLimitMax);
+            goCart(detailText);
+          },
+        });
+      }
+
+      // 点击增加页面数据
+      function proCompute(min, max) {
+        $(".add").click(function () {
+          if (proCount >= max) return;
+          proCount++;
+          $(".count").html(proCount);
+        });
+        $(".reduce").click(function () {
+          if (proCount <= min) return;
+          proCount--;
+          $(".count").html(proCount);
+        });
+      }
+
+      // 购物车逻辑
+      function goCart(proInfo) {
+        $(".finalPrice").click(() => {
+          if (!myGetCookie()["name"]) {
+            window.location.href = `./login.html?url=${window.location.href}`;
+            return;
+            // 为什么此处要加return?
+          }
+          proInfo.buyNum = $(".count").text();
+          proInfo.checked = true;
+          const cart = JSON.parse(window.localStorage.getItem("cart"));
+          console.log(cart);
+          if (cart === null) {
+            const cartObj = [];
+            cartObj.push(proInfo);
+            window.localStorage.setItem("cart", JSON.stringify(cartObj));
+          } else {
+            // 判断是否有同一种类型，有的话数量+1,没有的话
+            if (cart.length === 0) {
+              cart.push(proInfo);
+            } else {
+              let samePro = false;
+              cart.forEach((v, k) => {
+                if (v.promotionTipsKey === proInfo.promotionTipsKey) {
+                  v.buyNum =
+                    v.buyNum * 1 + proInfo.buyNum * 1 < v.buyLimitMax * 1
+                      ? v.buyNum * 1 + proInfo.buyNum * 1
+                      : v.buyLimitMax * 1;
+                  samePro = true;
+                }
+              });
+              if (!samePro) {
+                cart.push(proInfo);
+              }
+            }
+            window.localStorage.setItem("cart", JSON.stringify(cart));
+          }
+          window.location.href = "./shopCart.html";
+        });
+      }
+    </script>
+    <script>
+      //a.vpimg2.com/upload/merchandise/pdcimg/2018/10/23/101/148546691540295504306_525x525_90.jpg
+    </script>
+  </body>
+</html>

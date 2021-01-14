@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../pagination/pagination.css" />
+    <style>
+      .goodsList {
+        width: 984px;
+        margin: 20px auto;
+        overflow: hidden;
+      }
+      li {
+        width: 200px;
+        padding: 15px 13px 25px;
+        position: relative;
+        background: #999;
+        margin: 10px;
+        overflow: hidden;
+        border-radius: 10px;
+        cursor: pointer;
+        float: left;
+      }
+      .product-img {
+        width: 200px;
+        height: 219px;
+      }
+      .product-img img {
+        width: 200px;
+        height: 219px;
+      }
+      .product-img .product-snap {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 53px;
+        height: 53px;
+      }
+      .product-img .product-snap-img {
+        width: 100%;
+        height: 100%;
+      }
+      .country-info {
+        position: relative;
+        bottom: 14px;
+        display: -webkit-inline-box;
+        display: inline-flex;
+        -webkit-box-pack: start;
+        justify-content: flex-start;
+        -webkit-box-align: center;
+        align-items: center;
+        height: 20px;
+        background-color: #6c5ea9;
+        border-radius: 20px;
+        padding: 1px 5px;
+        overflow: hidden;
+      }
+      .country-info img {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        border-radius: 14px;
+      }
+      .country-info span {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 13px;
+        color: #fff;
+      }
+      .product-tip {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #585c64;
+        font-size: 14px;
+        margin-top: 16px;
+      }
+      .product-title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 18px;
+        color: #4a4a4a;
+        font-weight: 600;
+      }
+      .product-progress-box {
+        width: 100%;
+        height: 23px;
+        margin-top: 10px;
+        opacity: 1;
+        filter: Alpha(opacity=100);
+        transition: opacity 0.2s;
+        -moz-transition: opacity 0.2s;
+        -webkit-transition: opacity 0.2s;
+      }
+      .product-sell-num {
+        position: relative;
+        bottom: -14px;
+        background: #fff;
+        color: #dd3d95;
+        padding: 0 13px;
+        border: 1px solid #dd3d95;
+        border-radius: 50px;
+        display: inline-block;
+        height: 23px;
+        font-size: 14px;
+      }
+      .product-bottom {
+        margin-top: 22px;
+        white-space: nowrap;
+        background-color: #fff;
+      }
+      .shop-price-title {
+        display: inline-block;
+        width: 50px;
+        height: 18px;
+        background-color: #dd3d95;
+        color: #fff;
+        text-align: center;
+        overflow: hidden;
+        border-radius: 9px;
+        float: left;
+        margin-top: 14px;
+      }
+      .shop-price {
+        font-size: 18px;
+        color: #dd3d95;
+        font-weight: 600;
+        float: left;
+      }
+      .vip-price-box {
+        font-size: 14px;
+        color: #ababab;
+        line-height: 3;
+        display: inline-block;
+      }
+      .pages li {
+        list-style: none;
+        display: inline-block;
+        width: 30px;
+        height: 20px;
+        line-height: 20px;
+        background: rgb(197, 9, 181);
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+      }
+      .pages {
+        height: 100px;
+        display: block;
+        text-align: center;
+      }
+      #pagination {
+        display: inline-block;
+      }
+      .setPageDiv {
+        text-align: center;
+        margin: 30px 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="setPageDiv">
+      <div class="Pagination m-style" id="pagination"></div>
+    </div>
+    <ul class="goodsList"></ul>
+    <script src="../js/cookie.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/tools.js"></script>
+    <script src="../pagination/jquery.pagination.js"></script>
+    <script>
+      const logObj = getUrlVal();
+      let first_product_count = 20;
+      let time = new Date().getTime();
+      let otherProductIds = [];
+      let totalNum = 0;
+      if (logObj.type === "唯品快抢") {
+        firstPage();
+      }
+      // 商品列表的渲染
+      function setli(arr) {
+        let liStr = "";
+        arr.forEach(function (v, k) {
+          liStr += `<li
+              class="store-product-info"
+              data-proinfo="product|${v.salesVO.salesNo}|${v.productId}"
+              mst-mars="product|${v.salesVO.salesNo}|${v.productId}"
+            >
+              <div class="product-img">
+                <img
+                  class=""
+                  src="${v.squareImage}"
+                  data-original="${v.squareImage}"
+                />
+                <div class="product-snap">
+                  <img
+                    class="product-snap-img"
+                    src="${v.iconVO.snapUpTagUrl}"
+                  />
+                </div>
+              </div>
+              <div class="product-tip">
+                <span>${v.brandVO.brandName}</span
+                ><span> | </span
+                ><span
+                  >${v.productName}</span
+                >
+              </div>
+              <div class="product-title">
+               ${v.sellingPoint}
+              </div>
+              <div class="product-progress-box">
+                <div class="product-sell-num">
+                  ${v.stockVO.bossChosenDesc}
+                </div>
+              </div>
+              <div class="product-bottom">
+                <div class="product-vip-price" >
+                  <div class="shop-price-title">
+                    <p>${v.priceTipsVO.specialPriceName}</p>
+                  </div>
+                  <div class="shop-price">
+                    <span>￥</span
+                    ><span class="price"
+                      >${v.priceTipsVO.specialPrice}</span
+                    >
+                  </div>
+                  <div class="vip-price-box">
+                    <div class="vip-price">
+                      <span>￥</span
+                      ><span>${v.priceTipsVO.marketPrice}</span>
+                    </div>
+                    <div class="vip-discount">
+                      <span>${v.priceTipsVO.discount}</span
+                      ><span>折</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>`;
+        });
+        $(".goodsList").html(liStr);
+        goDetail();
+      }
+      function firstPage() {
+        $.ajax({
+          url: "/wph3",
+          type: "get",
+          data: {
+            module_id: 2536,
+            is_coming: 0,
+            first_product_count: first_product_count,
+            client_flag: "100014286 - 307767",
+            activityTipsTpye: 0,
+            warehouse: "VIP_BJ",
+            area_id: 101101101,
+            province_id: 101101101,
+            fdc_area_id: 101101101,
+            api_key: "70f71280d5d547b2a7bb370a529aeea1",
+            app_name: "shop_pc",
+            app_version: "4.0",
+            mars_cid: "1604847680120_7ee789766b975e170fc7223091c825a3",
+            _: time,
+          },
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function (res) {
+            console.log(res);
+            let firstProducts = res.data.firstProducts;
+            otherProductIds = res.data.otherProductIds.slice();
+            setli(firstProducts);
+            totalNum = firstProducts.length + otherProductIds.length;
+            let pagNum =
+              totalNum % first_product_count === 0
+                ? parseInt(totalNum / first_product_count)
+                : parseInt(totalNum / first_product_count) + 1;
+
+            // 分页
+            $(".Pagination").pagination({
+              pageCount: pagNum,
+              totalData: totalNum,
+              showData: 20,
+              current: 1,
+              prevCls: "prev",
+              nextCls: "next",
+              prevContent: "上一页",
+              nextContent: "下一页",
+              activeCls: "active",
+              count: 2,
+              coping: true,
+              homePage: "",
+              endPage: "",
+              keepShowPN: true,
+              callback: function (api) {
+                index = api.getCurrent() - 1;
+                if (index === 0) {
+                  firstPage();
+                } else {
+                  let ajaxArr = otherProductIds.slice(
+                    (index - 1) * 20,
+                    index * 20 < otherProductIds.length - 1
+                      ? $(this).index() * 20
+                      : otherProductIds.length - 1
+                  );
+                  //   对于传入的符号 一定要用decodeURIComponent 分析再进行拼接，否则就会传入拼接符错误
+                  otherPage(ajaxArr.join(","));
+                }
+              },
+            });
+          },
+        });
+      }
+      // 除了第一页其他页面的请求与渲染
+      function otherPage(ajaxArrStr) {
+        $.ajax({
+          url: "/wph2",
+          type: "get",
+          data: {
+            page_scene: 4,
+            module_id: 2536,
+            is_coming: false,
+            product_ids: ajaxArrStr,
+            first_product_count: first_product_count,
+            client_flag: "100014286 - 307767",
+            activityTipsTpye: 0,
+            tips_type: 0,
+            warehouse: "VIP_BJ",
+            area_id: 101101101,
+            province_id: 101101101,
+            fdc_area_id: 101101101,
+            api_key: "70f71280d5d547b2a7bb370a529aeea1",
+            app_name: "shop_pc",
+            app_version: "4.0",
+            mars_cid: "1604847680120_7ee789766b975e170fc7223091c825a3",
+            _: time,
+          },
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function (res) {
+            let products = res.data.products;
+            setli(products);
+          },
+        });
+      }
+
+      //点击跳转想抢
+      function goDetail() {
+        $(".goodsList li").click(function () {
+          const product = $(this).attr("data-proinfo").split("|");
+          window.location.href = `./detail.html?product=${product[1]}-${product[2]}`;
+        });
+      }
+    </script>
+    <script></script>
+  </body>
+</html>
